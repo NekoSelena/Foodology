@@ -6,4 +6,8 @@ app.get("/", function(request,response){
     response.render("start.hbs")
 })
 
+app.get("/", function(request,response){
+    response.render("userProfile.hbs")
+})
+
 app.listen(8080)
