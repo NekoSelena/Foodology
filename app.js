@@ -1,13 +1,9 @@
-const express = require('express');
-const expressHandlebars = require('express-handlebars');
-const app = express();
+const express = require('express')
+const expressHandelbars = require('express-handelbars')
+const app = express()
 
-const port = 8080;
+app.get("/", function(request,response){
+    response.render("start.hbs")
+})
 
-app.engine('hbs', expressHandlebars.engine({
-	defaultLayout: "main.hbs"
-}));
-
-app.get("/layout.css", function(request, response){
-	response.sendFile("layout.css", {root: "."})
-});
+app.listen(8080)
