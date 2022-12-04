@@ -1,12 +1,12 @@
 const express = require('express')
-const expressHandelbars = require('express-handelbars')
+const expressHandelbars = require('express-handlebars')
 const app = express()
 
 app.engine('hbs', expressHandelbars.engine({
     defaultLayout: "main.hbs"
 }))
 
-//for the turtle file
+/*//for the turtle file
 
 const fs = require('fs')
 const $rdf = require('rdflib')
@@ -21,7 +21,7 @@ $rdf.parse(
 	"http://gameverse.com/owl/games",
 	"text/turtle"
 )
-
+*/
 /*
 const stringQuery = `
 	SELECT
