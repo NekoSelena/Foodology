@@ -1,0 +1,53 @@
+@prefix : <http://example.com/owl/foodology#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dbc: <http://dbpedia.org/resource/Category:> .
+@prefix dbr: <http://dbpedia.org/resource/> .
+
+
+## Properties
+
+:stove a owl:ObjectProperty;
+         rdfs:domain dbc:Cooking_appliances ;
+         rdfs:range dbr:Stove .
+
+:oven a owl:ObjectProperty;
+         rdfs:domain dbc:Cooking_appliances ;
+         rdfs:range dbr:Oven .
+
+:pot a owl:ObjectProperty;
+         rdfs:domain dbc:Cooking_appliances ;
+         rdfs:range dbr:Pot .
+
+:pan a owl:ObjectProperty;
+         rdfs:domain dbc:Cooking_appliances ;
+         rdfs:range dbr:Pan .
+
+:kettle a owl:ObjectProperty;
+         rdfs:domain dbc:Cooking_appliances ;
+         rdfs:range dbr:Kettle .
+
+
+## Classes
+
+## Individuals
+
+:user_one a foaf:Person;
+    :id "jane_doe";
+    :name "Jane Doe";
+    :stove "yes";
+    :oven "yes";
+    :pot "no";
+    :pan "yes";
+    :kettle "yes" .
+
+:user_two a foaf:Person;
+    :id "peter_grant";
+    :name "Peter Grant";
+    :stove "no";
+    :oven "yes";
+    :pot "yes";
+    :pan "yes";
+    :kettle "no" .

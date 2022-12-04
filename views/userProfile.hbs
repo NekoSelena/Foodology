@@ -1,13 +1,8 @@
-<h1>Welcome!</h1>
-<h3>Add your costumization for recipies!</h3>
-<form>  
-<label>Likes</label> <br>  
-<input type="likes"> <br> <br>  
-<label>Dislikes</label> <br>  
-<input type="dislikes">  <br> <br>  
-<label>Utensils available</label> <br>  
-<input type="Utensils">  <br> <br>  
-<label>Allergies</label> <br>  
-<input type="allergies">  <br> <br>  
-<input type="submit" value="Submit">  
-</form>>
+<h1>Welcome {{user.name}}!</h1>
+</hr>
+<h2>Your settings :</h2>
+<p>Stove : {{user.stove}}</br>
+Oven : {{user.oven}}</br>
+Pot : {{user.pot}}</br>
+Pan : {{user.pan}}</br>
+Kettle : {{user.kettle}}</p>
