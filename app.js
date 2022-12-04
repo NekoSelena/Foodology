@@ -95,8 +95,8 @@ app.get("/", function(request,response){
     response.render("start.hbs")
 })
 
-app.get("/", function(request,response){
-    response.render("userProfile.hbs")
+app.get("/userprofile", function(request,response){
+    response.render("userprofile.hbs")
 })
 
 app.get("/layout.css", function(request, response){
