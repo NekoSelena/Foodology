@@ -1,6 +1,13 @@
 <h1>Users :</h1>
-<ul>
-	{{#each users}}
-		<li><a href="/users/{{id}}">{{name}}</a></li>
-	{{/each}}
-</ul>
+
+<p>Please enter your full name :</p>
+<form>
+    <input type="text" id="fullname" name="username">
+    <input type="submit" value="Submit" onClick="Redirect()">
+</form>
+
+<script>
+    function Redirect() {
+        window.location.href='/';
+    }
+</script>

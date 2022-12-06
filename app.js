@@ -10,6 +10,8 @@ app.engine('hbs', expressHandelbars.engine({
 const fs = require('fs')
 const $rdf = require('rdflib')
 
+var FOODOLOGY = $rdf.Namespace("http://example.com/owl/foodology#")
+
 const turtleString = fs.readFileSync('data/users.ttl').toString()
 
 const store = $rdf.graph()
@@ -45,7 +47,8 @@ const stringQuery = `
 const query = $rdf.SPARQLToQuery(stringQuery, false, store)
 
 // To see what we get back as result:
-console.log(store.querySync(query))
+//console.log(store.querySync(query))
+
 
 const users = store.querySync(query).map(
     userResult => {
@@ -65,7 +68,19 @@ app.get("/", function(request,response){
     response.render("start.hbs")
 })
 
+var fullname = ""
+var new_user = ""
+
 app.get("/users", function(request,response){
+
+    fullname = request.query.username
+    console.log("fullname: " + fullname)
+    if (fullname != undefined) {
+        new_user = "http://example.com/owl/foodology#" + fullname.toLowerCase().replace(' ', '_')
+        console.log("User: " + new_user)
+        store.add($rdf.sym(new_user), FOODOLOGY('id'), fullname.toLowerCase().replace(' ', '_'))
+        store.add($rdf.sym(new_user), FOODOLOGY('name'), fullname)
+    }
 
     const model = {
         users: users
@@ -74,23 +89,24 @@ app.get("/users", function(request,response){
     response.render("users.hbs", model)
 })
 
+console.log("User: " + new_user)
+
 app.get("/users/:id", function(request, response){
-	
-	const id = request.params.id
-	
-	const user = users.find(g => g.id == id)
-	
-	const model = {
-		user: user
-	}
-	
-	response.render("userProfile.hbs", model)
-	
+
+    const id = request.params.id
+
+    const user = users.find(g => g.id == id)
+
+    const model = {
+        user: user
+    }
+
+    response.render("userProfile.hbs", model)
+
 })
 
 app.get("/layout.css", function(request, response){
     response.sendFile("layout.css", {root: "."})
 })
-
 
 app.listen(8080)

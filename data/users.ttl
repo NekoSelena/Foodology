@@ -9,6 +9,10 @@
 
 ## Properties
 
+:id a owl:ObjectProperty .
+
+:name a owl:ObjectProperty .
+
 :stove a owl:ObjectProperty;
          rdfs:domain dbc:Cooking_appliances ;
          rdfs:range dbr:Stove .
@@ -28,26 +32,3 @@
 :kettle a owl:ObjectProperty;
          rdfs:domain dbc:Cooking_appliances ;
          rdfs:range dbr:Kettle .
-
-
-## Classes
-
-## Individuals
-
-:user_one a foaf:Person;
-    :id "jane_doe";
-    :name "Jane Doe";
-    :stove "yes";
-    :oven "yes";
-    :pot "no";
-    :pan "yes";
-    :kettle "yes" .
-
-:user_two a foaf:Person;
-    :id "peter_grant";
-    :name "Peter Grant";
-    :stove "no";
-    :oven "yes";
-    :pot "yes";
-    :pan "yes";
-    :kettle "no" .
