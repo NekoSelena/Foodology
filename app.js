@@ -6,102 +6,107 @@ app.engine('hbs', expressHandelbars.engine({
     defaultLayout: "main.hbs"
 }))
 
-/*//for the turtle file
-
+//for the turtle file
 const fs = require('fs')
 const $rdf = require('rdflib')
 
-const turtleString = fs.readFileSync('game-resources.ttl').toString()
+var FOODOLOGY = $rdf.Namespace("http://example.com/owl/foodology#")
+
+const turtleString = fs.readFileSync('data/users.ttl').toString()
 
 const store = $rdf.graph()
 
 $rdf.parse(
-	turtleString,
-	store,
-	"http://gameverse.com/owl/games",
-	"text/turtle"
-)
-*/
-/*
+    turtleString,
+    store,
+    "http://example.com/owl/foodology",
+    "text/turtle"
+    )
+
 const stringQuery = `
-	SELECT
-		?id
-		?name
-		?description
-	WHERE {
-		?game a <http://gameverse.com/owl/games#Game> .
-		?game <http://gameverse.com/owl/games#id> ?id .
-		?game <http://gameverse.com/owl/games#name> ?name .
-		?game <http://gameverse.com/owl/games#description> ?description .
-	}
+    SELECT
+        ?id
+        ?name
+        ?stove
+        ?oven
+        ?pot
+        ?pan
+        ?kettle
+    WHERE {
+        ?user a <http://xmlns.com/foaf/0.1/Person> .
+        ?user <http://example.com/owl/foodology#id> ?id .
+        ?user <http://example.com/owl/foodology#name> ?name .
+        ?user <http://example.com/owl/foodology#stove> ?stove .
+        ?user <http://example.com/owl/foodology#oven> ?oven .
+        ?user <http://example.com/owl/foodology#pot> ?pot .
+        ?user <http://example.com/owl/foodology#pan> ?pan .
+        ?user <http://example.com/owl/foodology#kettle> ?kettle .
+    }
 `
 
 const query = $rdf.SPARQLToQuery(stringQuery, false, store)
 
 // To see what we get back as result:
-// console.log(store.querySync(query))
+//console.log(store.querySync(query))
 
-const games = store.querySync(query).map(
-	gameResult => {
-		return {
-			id: gameResult['?id'].value,
-			name: gameResult['?name'].value,
-			description: gameResult['?description'].value
-		}
-	}
+
+const users = store.querySync(query).map(
+    userResult => {
+        return {
+            id: userResult['?id'].value,
+            name: userResult['?name'].value,
+            stove: userResult['?stove'].value,
+            oven: userResult['?oven'].value,
+            pot: userResult['?pot'].value,
+            pan: userResult['?pan'].value,
+            kettle: userResult['?kettle'].value
+        }
+    }
 )
-*/
-
-//how to get info from dbpedia
-
-/*
-// Try to find more information about each game from
-// linked data.
-const ParsingClient = require('sparql-http-client/ParsingClient')
-
-const client = new ParsingClient({
-	endpointUrl: 'https://dbpedia.org/sparql'
-})
-
-for(const game of games){
-	
-	const query = `
-		SELECT
-			?releaseDate
-		WHERE {
-			?game dbp:title "${game.name}"@en .
-			?game dbo:releaseDate ?releaseDate .
-		}
-	`
-	
-	client.query.select(query).then(rows => {
-		
-		// Too see what we get back as result:
-		// console.log(rows)
-		
-		game.releaseDate = 'Unknown' // Default value in case we don't find any.
-		rows.forEach(row => {
-			game.releaseDate = row.releaseDate.value
-		})
-		
-	}).catch(error => {
-		console.log(error)
-	})
-	
-}
-*/
 
 app.get("/", function(request,response){
     response.render("start.hbs")
 })
 
-app.get("/userprofile", function(request,response){
-    response.render("userprofile.hbs")
+var fullname = ""
+var new_user = ""
+
+app.get("/users", function(request,response){
+
+    fullname = request.query.username
+    console.log("fullname: " + fullname)
+    if (fullname != undefined) {
+        new_user = "http://example.com/owl/foodology#" + fullname.toLowerCase().replace(' ', '_')
+        console.log("User: " + new_user)
+        store.add($rdf.sym(new_user), FOODOLOGY('id'), fullname.toLowerCase().replace(' ', '_'))
+        store.add($rdf.sym(new_user), FOODOLOGY('name'), fullname)
+    }
+
+    const model = {
+        users: users
+    }
+
+    response.render("users.hbs", model)
+})
+
+console.log("User: " + new_user)
+
+app.get("/users/:id", function(request, response){
+
+    const id = request.params.id
+
+    const user = users.find(g => g.id == id)
+
+    const model = {
+        user: user
+    }
+
+    response.render("userProfile.hbs", model)
+
 })
 
 app.get("/layout.css", function(request, response){
-	response.sendFile("layout.css", {root: "."})
+    response.sendFile("layout.css", {root: "."})
 })
-
 
 app.listen(8080)
