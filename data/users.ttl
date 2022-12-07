@@ -6,29 +6,39 @@
 @prefix dbc: <http://dbpedia.org/resource/Category:> .
 @prefix dbr: <http://dbpedia.org/resource/> .
 
-
 ## Properties
 
 :id a owl:ObjectProperty .
 
 :name a owl:ObjectProperty .
 
-:stove a owl:ObjectProperty;
+:has_stove a owl:ObjectProperty;
          rdfs:domain dbc:Cooking_appliances ;
          rdfs:range dbr:Stove .
 
-:oven a owl:ObjectProperty;
+:has_oven a owl:ObjectProperty;
          rdfs:domain dbc:Cooking_appliances ;
          rdfs:range dbr:Oven .
 
-:pot a owl:ObjectProperty;
+:has_pot a owl:ObjectProperty;
          rdfs:domain dbc:Cooking_appliances ;
          rdfs:range dbr:Pot .
 
-:pan a owl:ObjectProperty;
+:has_pan a owl:ObjectProperty;
          rdfs:domain dbc:Cooking_appliances ;
          rdfs:range dbr:Pan .
 
-:kettle a owl:ObjectProperty;
+:has_kettle a owl:ObjectProperty;
          rdfs:domain dbc:Cooking_appliances ;
          rdfs:range dbr:Kettle .
+
+## Users
+
+:jane_doe a foaf:Person;
+    :id "jane_doe";
+    :name "Jane Doe";
+    :has_stove "yes";
+    :has_oven "no";
+    :has_pot "yes";
+    :has_pan "yes";
+    :has_kettle "no" .

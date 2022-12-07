@@ -3,29 +3,38 @@
 <h2>Your settings :</h2>
 <form>
     <p>Stove :</p>
-    <input type="radio" id="stove" name="has_stove" value="yes">
+    <input type="radio" id="stove_yes" name="has_stove" value="yes">
     <label for="stove">yes</label>
-    <input type="radio" id="stove" name="has_stove" value="no">
+    <input type="radio" id="stove_no" name="has_stove" value="no">
     <label for="stove">no</label><br>
     <p>Oven :</p>
-    <input type="radio" id="oven" name="has_oven" value="yes">
+    <input type="radio" id="oven_yes" name="has_oven" value="yes">
     <label for="oven">yes</label>
-    <input type="radio" id="oven" name="has_oven" value="no">
+    <input type="radio" id="oven_no" name="has_oven" value="no">
     <label for="oven">no</label><br>
     <p>Pot :</p>
-    <input type="radio" id="pot" name="has_pot" value="yes">
+    <input type="radio" id="pot_yes" name="has_pot" value="yes">
     <label for="pot">yes</label>
-    <input type="radio" id="pot" name="has_pot" value="no">
+    <input type="radio" id="pot_no" name="has_pot" value="no">
     <label for="pot">no</label><br>
     <p>Pan :</p>
-    <input type="radio" id="pan" name="has_pan" value="yes">
+    <input type="radio" id="pan_yes" name="has_pan" value="yes">
     <label for="pan">yes</label>
-    <input type="radio" id="pan" name="has_pan" value="no">
+    <input type="radio" id="pan_no" name="has_pan" value="no">
     <label for="pan">no</label><br>
     <p>Kettle :</p>
-    <input type="radio" id="kettle" name="has_kettle" value="yes">
+    <input type="radio" id="kettle_yes" name="has_kettle" value="yes">
     <label for="kettle">yes</label>
-    <input type="radio" id="kettle" name="has_kettle" value="no">
+    <input type="radio" id="kettle_no" name="has_kettle" value="no">
     <label for="kettle">no</label><br>
-    <input type="submit" value="Submit">
+    <input type="submit" value="Submit" id="submit_button">
 </form>
+
+<script>
+    // keep the radio button checked
+    document.getElementById('stove_' + "{{preferences.has_stove}}").checked = true
+    document.getElementById('oven_' + "{{preferences.has_oven}}").checked = true
+    document.getElementById('pot_' + "{{preferences.has_pot}}").checked = true
+    document.getElementById('pan_' + "{{preferences.has_pan}}").checked = true
+    document.getElementById('kettle_' + "{{preferences.has_kettle}}").checked = true
+</script>
