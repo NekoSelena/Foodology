@@ -4,15 +4,6 @@
 @prefix dbr: <http://dbpedia.org/resource/>.
 @prefix foo: <http://example.com/owl/foodology#>.
 
-foo:alexander_flemming
-    a foaf:Person;
-    foo:has_kettle "yes";
-    foo:has_oven "no";
-    foo:has_pan "yes";
-    foo:has_pot "no";
-    foo:has_stove "yes";
-    foo:id "alexander_flemming";
-    foo:name "Alexander Flemming".
 foo:has_kettle
     a owl:ObjectProperty;
     rdfs:domain <http://dbpedia.org/resource/Category:Cooking_appliances>;
@@ -35,55 +26,36 @@ foo:has_stove
     rdfs:range dbr:Stove.
 foo:id a owl:ObjectProperty.
 
-foo:jane_doe
+foo:laurel_jones
     a foaf:Person;
-    foo:has_kettle "no";
-    foo:has_oven "no";
-    foo:has_pan "yes";
-    foo:has_pot "yes";
-    foo:has_stove "yes";
-    foo:id "jane_doe";
-    foo:name "Jane Doe".
-foo:kevin_melrose
-    foo:has_kettle "no";
-    foo:has_oven "no";
-    foo:has_pan "no";
-    foo:has_pot "no";
-    foo:has_stove "no".
-foo:lina_schmitt
-    a foaf:Person;
-    foo:has_kettle "yes";
-    foo:has_oven "no";
-    foo:has_pan "no";
-    foo:has_pot "yes";
-    foo:has_stove "yes";
-    foo:id "lina_schmitt";
-    foo:name "Lina Schmitt".
-foo:maria_dalucci
-    a foaf:Person;
-    foo:has_kettle "yes";
-    foo:has_oven "no";
-    foo:has_pan "yes";
-    foo:has_pot "yes";
-    foo:has_stove "no";
-    foo:id "maria_dalucci";
-    foo:name "Maria Dalucci".
-foo:name a owl:ObjectProperty.
-
-foo:olivia_newton
-    a foaf:Person;
+    foo:allergy_eggs "yes";
+    foo:allergy_fish "no";
+    foo:allergy_milk "no";
+    foo:allergy_peanuts "no";
+    foo:allergy_shellfish "no";
+    foo:allergy_soybeans "no";
+    foo:allergy_treenuts "no";
+    foo:allergy_wheat "no";
     foo:has_kettle "yes";
     foo:has_oven "yes";
-    foo:has_pan "yes";
-    foo:has_pot "yes";
+    foo:has_pan "no";
+    foo:has_pot "no";
     foo:has_stove "yes";
-    foo:id "olivia_newton";
-    foo:name "Olivia Newton".
+    foo:id "laurel_jones";
+    foo:name "Laurel Jones".
 foo:peter_grant
     a foaf:Person;
+    foo:allergy_eggs "yes";
+    foo:allergy_fish "no";
+    foo:allergy_milk "yes";
+    foo:allergy_peanuts "no";
+    foo:allergy_shellfish "no";
+    foo:allergy_soybeans "no";
+    foo:allergy_treenuts "no";
+    foo:allergy_wheat "yes";
     foo:has_kettle "yes";
     foo:has_oven "no";
-    foo:has_pan "yes";
+    foo:has_pan "no";
     foo:has_pot "yes";
     foo:has_stove "no";
     foo:id "peter_grant";

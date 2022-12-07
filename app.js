@@ -34,6 +34,14 @@ const stringQuery = `
         ?pot
         ?pan
         ?kettle
+        ?milk
+        ?treenuts
+        ?eggs
+        ?peanuts
+        ?fish
+        ?shellfish
+        ?wheat
+        ?soybeans
     WHERE {
         ?user a <http://xmlns.com/foaf/0.1/Person> .
         ?user <http://example.com/owl/foodology#id> ?id .
@@ -43,6 +51,14 @@ const stringQuery = `
         ?user <http://example.com/owl/foodology#has_pot> ?pot .
         ?user <http://example.com/owl/foodology#has_pan> ?pan .
         ?user <http://example.com/owl/foodology#has_kettle> ?kettle .
+        ?user <http://example.com/owl/foodology#allergy_milk> ?milk .
+        ?user <http://example.com/owl/foodology#allergy_treenuts> ?treenuts .
+        ?user <http://example.com/owl/foodology#allergy_eggs> ?eggs .
+        ?user <http://example.com/owl/foodology#allergy_peanuts> ?peanuts .
+        ?user <http://example.com/owl/foodology#allergy_fish> ?fish .
+        ?user <http://example.com/owl/foodology#allergy_shellfish> ?shellfish .
+        ?user <http://example.com/owl/foodology#allergy_wheat> ?wheat .
+        ?user <http://example.com/owl/foodology#allergy_soybeans> ?soybeans .
     }
 `
 
@@ -57,7 +73,15 @@ var users = store.querySync(query).map(
             oven: userResult['?oven'].value,
             pot: userResult['?pot'].value,
             pan: userResult['?pan'].value,
-            kettle: userResult['?kettle'].value
+            kettle: userResult['?kettle'].value,
+            milk: userResult['?milk'].value,
+            treenuts: userResult['?treenuts'].value,
+            eggs: userResult['?eggs'].value,
+            peanuts: userResult['?peanuts'].value,
+            fish: userResult['?fish'].value,
+            shellfish: userResult['?shellfish'].value,
+            wheat: userResult['?wheat'].value,
+            soybeans: userResult['?soybeans'].value
         }
     }
 )
@@ -71,10 +95,8 @@ app.get("/", function(_request,response){
 app.get("/users", function(request,response){
 
     let fullname = request.query.username
-    console.log("fullname: " + fullname)
     if (fullname != undefined) {
         let new_user = "http://example.com/owl/foodology#" + fullname.toLowerCase().replace(' ', '_')
-        console.log("User: " + new_user)
 
         // update the user's settings in the store
 
@@ -97,8 +119,19 @@ app.get("/users/:id", function(request, response){
     var preferences = {}
 
     let new_user = "http://example.com/owl/foodology#" + id
+    let arrayname = id.replace('_', ' ').split(' ')
+    for (var i = 0; i < arrayname.length; i++) {
+        arrayname[i] = arrayname[i].charAt(0).toUpperCase() + arrayname[i].slice(1);
+    }
+    fullname = arrayname.join(' ')
 
-    if (Object.keys(request.query).length != 0 && store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('has_stove'), null, null) != undefined) {
+    if(store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('id'), id, null) == undefined) {
+        store.add($rdf.sym(new_user), RDF('type'), FOAF('Person'))
+        store.add($rdf.sym(new_user), FOODOLOGY('id'), id)
+        store.add($rdf.sym(new_user), FOODOLOGY('name'), fullname)
+    }
+
+    if (Object.keys(request.query).length != 0 && (store.anyStatementMatching($rdf.sym(new_user), null, 'yes', null) != undefined || store.anyStatementMatching($rdf.sym(new_user), null, 'no', null) != undefined)) {
         preferences = request.query
 
         // add the user's settings in the store
@@ -117,18 +150,33 @@ app.get("/users/:id", function(request, response){
                 console.error(err);
             }
         });
-    } else if (Object.keys(request.query).length === 0 || store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('has_stove'), null, null) == undefined) {
+    } else if (Object.keys(request.query).length === 0 || (store.anyStatementMatching($rdf.sym(new_user), null, 'yes', null) == undefined && store.anyStatementMatching($rdf.sym(new_user), null, 'no', null) == undefined)) {
+        // console.log(store.anyStatementMatching($rdf.sym(new_user), null, 'no', null))
+        // console.log(store.anyStatementMatching($rdf.sym(new_user), null, 'yes', null))
         preferences = {['has_stove']:'no', 
                        ['has_oven']:'no',
                        ['has_pot']:'no',
                        ['has_pan']:'no',
-                       ['has_kettle']:'no'}
+                       ['has_kettle']:'no',
+                       ['allergy_milk']:'no',
+                       ['allergy_treenuts']:'no',
+                       ['allergy_eggs']:'no',
+                       ['allergy_peanuts']:'no',
+                       ['allergy_fish']:'no',
+                       ['allergy_shellfish']:'no',
+                       ['allergy_wheat']:'no',
+                       ['allergy_soybeans']:'no'}
 
         // update the user's settings in the store
         for (var i = 0; i < Object.keys(preferences).length; i++) {
             var preference = Object.keys(preferences)[i];
+            var is_value = store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY(preference), null)
             var insert = $rdf.st($rdf.sym(new_user), FOODOLOGY(preference), Object.values(preferences)[i])
-            store.add(insert)
+            if (is_value == undefined) {
+                store.add(insert)
+            } else if (is_value.object.value == 'yes') {
+                preferences[Object.keys(preferences)[i]] = 'yes'
+            }
         }
         let content = $rdf.serialize(undefined, store, null, 'text/turtle')
 
@@ -143,15 +191,24 @@ app.get("/users/:id", function(request, response){
                        [store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('has_oven'), null).predicate.value.replace("http://example.com/owl/foodology#", '')]:store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('has_oven'), null).object.value,
                        [store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('has_pot'), null).predicate.value.replace("http://example.com/owl/foodology#", '')]:store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('has_pot'), null).object.value,
                        [store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('has_pan'), null).predicate.value.replace("http://example.com/owl/foodology#", '')]:store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('has_pan'), null).object.value,
-                       [store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('has_kettle'), null).predicate.value.replace("http://example.com/owl/foodology#", '')]:store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('has_kettle'), null).object.value}
+                       [store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('has_kettle'), null).predicate.value.replace("http://example.com/owl/foodology#", '')]:store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('has_kettle'), null).object.value,
+                       [store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('allergy_milk'), null).predicate.value.replace("http://example.com/owl/foodology#", '')]:store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('allergy_milk'), null).object.value, 
+                       [store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('allergy_treenuts'), null).predicate.value.replace("http://example.com/owl/foodology#", '')]:store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('allergy_treenuts'), null).object.value,
+                       [store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('allergy_eggs'), null).predicate.value.replace("http://example.com/owl/foodology#", '')]:store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('allergy_eggs'), null).object.value,
+                       [store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('allergy_peanuts'), null).predicate.value.replace("http://example.com/owl/foodology#", '')]:store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('allergy_peanuts'), null).object.value,
+                       [store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('allergy_fish'), null).predicate.value.replace("http://example.com/owl/foodology#", '')]:store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('allergy_fish'), null).object.value,
+                       [store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('allergy_shellfish'), null).predicate.value.replace("http://example.com/owl/foodology#", '')]:store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('allergy_shellfish'), null).object.value,
+                       [store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('allergy_wheat'), null).predicate.value.replace("http://example.com/owl/foodology#", '')]:store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('allergy_wheat'), null).object.value,
+                       [store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('allergy_soybeans'), null).predicate.value.replace("http://example.com/owl/foodology#", '')]:store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('allergy_soybeans'), null).object.value,
+               }
 
         // update the user's settings in the store
         for (var i = 0; i < Object.keys(preferences).length; i++) {
             var preference = Object.keys(preferences)[i];
             var remove = store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY(preference), null)
             var insert = $rdf.st($rdf.sym(new_user), FOODOLOGY(preference), Object.values(preferences)[i])
-            console.log("Remove " + remove)
-            console.log("Insert " + insert)
+            // console.log("Remove " + remove)
+            // console.log("Insert " + insert)
             store.remove(remove)
             store.add(insert)
         }

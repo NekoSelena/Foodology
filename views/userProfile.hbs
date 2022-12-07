@@ -1,6 +1,6 @@
 <h1>Welcome {{user.name}}!</h1>
 </hr>
-<h2>Your settings :</h2>
+<h2>Your kitchen :</h2>
 <form>
     <p>Stove :</p>
     <input type="radio" id="stove_yes" name="has_stove" value="yes">
@@ -27,7 +27,50 @@
     <label for="kettle">yes</label>
     <input type="radio" id="kettle_no" name="has_kettle" value="no">
     <label for="kettle">no</label><br>
-    <input type="submit" value="Submit" id="submit_button">
+
+<h2>Your allergies :</h2>
+
+    <p>Milk :</p>
+    <input type="radio" id="milk_yes" name="allergy_milk" value="yes">
+    <label for="milk">yes</label>
+    <input type="radio" id="milk_no" name="allergy_milk" value="no">
+    <label for="milk">no</label><br>
+    <p>Tree Nuts :</p>
+    <input type="radio" id="treenuts_yes" name="allergy_treenuts" value="yes">
+    <label for="treenuts">yes</label>
+    <input type="radio" id="treenuts_no" name="allergy_treenuts" value="no">
+    <label for="treenuts">no</label><br>
+    <p>Eggs :</p>
+    <input type="radio" id="eggs_yes" name="allergy_eggs" value="yes">
+    <label for="eggs">yes</label>
+    <input type="radio" id="eggs_no" name="allergy_eggs" value="no">
+    <label for="eggs">no</label><br>
+    <p>Peanuts :</p>
+    <input type="radio" id="peanuts_yes" name="allergy_peanuts" value="yes">
+    <label for="peanuts">yes</label>
+    <input type="radio" id="peanuts_no" name="allergy_peanuts" value="no">
+    <label for="peanuts">no</label><br>
+    <p>Fish :</p>
+    <input type="radio" id="fish_yes" name="allergy_fish" value="yes">
+    <label for="fish">yes</label>
+    <input type="radio" id="fish_no" name="allergy_fish" value="no">
+    <label for="fish">no</label><br>
+    <p>Shellfish :</p>
+    <input type="radio" id="shellfish_yes" name="allergy_shellfish" value="yes">
+    <label for="shellfish">yes</label>
+    <input type="radio" id="shellfish_no" name="allergy_shellfish" value="no">
+    <label for="shellfish">no</label><br>
+    <p>Wheat :</p>
+    <input type="radio" id="wheat_yes" name="allergy_wheat" value="yes">
+    <label for="wheat">yes</label>
+    <input type="radio" id="wheat_no" name="allergy_wheat" value="no">
+    <label for="wheat">no</label><br>
+    <p>Soybeans :</p>
+    <input type="radio" id="soybeans_yes" name="allergy_soybeans" value="yes">
+    <label for="soybeans">yes</label>
+    <input type="radio" id="soybeans_no" name="allergy_soybeans" value="no">
+    <label for="soybeans">no</label><br>
+    <input type="submit" value="Submit">
 </form>
 
 <script>
@@ -37,4 +80,12 @@
     document.getElementById('pot_' + "{{preferences.has_pot}}").checked = true
     document.getElementById('pan_' + "{{preferences.has_pan}}").checked = true
     document.getElementById('kettle_' + "{{preferences.has_kettle}}").checked = true
+    document.getElementById('milk_' + "{{preferences.allergy_milk}}").checked = true
+    document.getElementById('treenuts_' + "{{preferences.allergy_treenuts}}").checked = true
+    document.getElementById('eggs_' + "{{preferences.allergy_eggs}}").checked = true
+    document.getElementById('peanuts_' + "{{preferences.allergy_peanuts}}").checked = true
+    document.getElementById('fish_' + "{{preferences.allergy_fish}}").checked = true
+    document.getElementById('shellfish_' + "{{preferences.allergy_shellfish}}").checked = true
+    document.getElementById('wheat_' + "{{preferences.allergy_wheat}}").checked = true
+    document.getElementById('soybeans_' + "{{preferences.allergy_soybeans}}").checked = true
 </script>
