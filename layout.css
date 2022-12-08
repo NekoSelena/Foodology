@@ -52,14 +52,28 @@ form {
 
 .kitchen-container, .allergies-container {
     display: flex;
-    align-self: flex-start;
-    flex: auto;
-    flex-direction: column;
+    flex: 1 1 30%;
+    align-self: center;
+    flex-direction: row;
     align-items: center;
     align-content: center;
     flex-wrap: wrap;
-    width: 20vw;
-    height: 30vh;
+    justify-content: space-between;
+    padding: 3vh 0;
+    margin:-2vw;
+}
+
+.radio-container .check_no {
+    margin-left: 1vw;
+}
+
+.kitchen-container>*, .allergies-container>* {
+    margin: 2vw;
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    align-items: center;
+    align-content: center;
 }
 
 .kitchen_tools, .allergies {
@@ -72,9 +86,9 @@ form {
     flex-direction: column;
     border-left: 1px solid #ddead1;
     border-right: 1px solid #ddead1;
-    /*padding: 0 3vw;*/
-    width: max-content;
-    height: max-content;
+    padding: 0 3vw;
+    width: 20vw;
+    height: fit-content;
 }
 
 :root {
@@ -145,10 +159,10 @@ input[type='submit']{
     font-weight: 700;
     font-size: 16px;
 }
-
+/* 
 form p {
     text-decoration: underline;
-}
+} */
 
 .form-container {
     display: flex;
