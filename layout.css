@@ -1,8 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap');
+
 header{
 	font-size: 2em;
 	text-align: center;
     padding: 22px;
     color: #ddead1;
+    font-weight: 700;
 }
 
 nav{
@@ -10,14 +13,17 @@ nav{
     padding-right: 12px;
 }
 
-h1{
+h1, h2{
     text-align: center;
     color: #ddead1;
+    font-weight: 700;
 }
 
 h3{
     text-align: center;
     color: #ddead1;
+    font-weight: 400;
+    text-align: center;
 }
 
 main{
@@ -28,6 +34,130 @@ main{
 
 body{
     background-color: #658354;
+    font-family: 'Montserrat', sans-serif;
+    color: #ddead1;
+    font-weight: 400;
+}
+
+form {
+    display: flex;
+    align-items: center;
+    align-self: center;
+    justify-content: center;
+    flex: auto;
+    flex-direction: column;
+    gap: 3vw;
+}
+
+
+.kitchen-container, .allergies-container {
+    display: flex;
+    align-self: flex-start;
+    flex: auto;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    flex-wrap: wrap;
+    width: 20vw;
+    height: 30vh;
+}
+
+.kitchen_tools, .allergies {
+    display: flex;
+    align-items: center;
+    align-self: flex-start;
+    align-content: center;
+    justify-content: flex-start;
+    flex: auto;
+    flex-direction: column;
+    border-left: 1px solid #ddead1;
+    border-right: 1px solid #ddead1;
+    /*padding: 0 3vw;*/
+    width: max-content;
+    height: max-content;
+}
+
+:root {
+    --form-control-color-yes: #99fa60;
+    --form-control-color-no: #b11111;
+}
+
+.form-control:focus-within {
+    color: var(--form-control-color);
+}
+
+.check_yes::before {
+    box-shadow: inset 1em 1em var(--form-control-color-yes);
+}
+.check_no::before {
+    box-shadow: inset 1em 1em var(--form-control-color-no);
+}
+
+
+input[type="radio"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: var(--form-background);
+    margin: 0;
+  
+    font: inherit;
+    color: currentColor;
+    width: 1.15em;
+    height: 1.15em;
+    border: 0.15em solid currentColor;
+    border-radius: 50%;
+    transform: translateY(-0.075em);
+    display: inline-grid;
+    place-content: center;
+  }
+
+input[type="radio"]::before {
+    content: "";
+    width: 0.65em;
+    height: 0.65em;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    /* Windows High Contrast Mode */
+    background-color: CanvasText;
+}
+
+input[type="radio"]:checked::before {
+      transform: scale(1);
+}
+
+/*
+input[type='radio']+label{
+    color: #232323;
+    font-weight: 300;
+}
+input[type='radio']:checked+label{
+    color: #ddead1;
+    accent-color: #658354;
+} */
+
+input[type='submit']{
+    background-color: #ddead1;
+    color: #658354;
+    border-radius: 50px;
+    padding: 1vw 4vw;
+    border: none;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+form p {
+    text-decoration: underline;
+}
+
+.form-container {
+    display: flex;
+    align-items: flex-start;
+    align-self: center;
+    justify-content: center;
+    flex: auto;
+    flex-direction: row;
+    gap: 5vw;
 }
 
 footer{
@@ -37,11 +167,16 @@ footer{
 	padding-top: 0.5em;
 	text-align: center;
     color: #ddead1;
+    font-weight: 300;
 }
 
 a{
-    cursor: pointer;
     padding-right: 12px;
     color: #ddead1;
     text-decoration: none;
+    font-weight: 300;
+}
+
+a:focus, a:active, a:hover{
+    font-weight: 700;
 }
