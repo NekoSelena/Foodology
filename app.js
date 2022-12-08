@@ -97,8 +97,7 @@ app.get("/users", function(request,response){
     let fullname = request.query.username
     if (fullname != undefined) {
         let new_user = "http://example.com/owl/foodology#" + fullname.toLowerCase().replace(' ', '_')
-
-        // update the user's settings in the store
+        var user = {'id':fullname.toLowerCase().replace(' ', '_'), 'name':fullname}
 
         // add the new user to the store
         store.add($rdf.sym(new_user), RDF('type'), FOAF('Person'))
@@ -107,16 +106,19 @@ app.get("/users", function(request,response){
     }
 
     const model = {
-        users: users
+        user: user
     }
 
     response.render("users.hbs", model)
 })
 
+var user_id = ''
+
 app.get("/users/:id", function(request, response){
 
     const id = request.params.id
     var preferences = {}
+    user_id = id
 
     let new_user = "http://example.com/owl/foodology#" + id
     let arrayname = id.replace('_', ' ').split(' ')
@@ -222,8 +224,8 @@ app.get("/users/:id", function(request, response){
         });
     }
 
-    console.log(id)
-    console.log(preferences)
+    // console.log(id)
+    // console.log(preferences)
 
     const user = users.find(g => g.id == id)
 
@@ -236,16 +238,42 @@ app.get("/users/:id", function(request, response){
 
 })
 
+app.get("/recipes", function(request, response){
+
+    const user = users.find(g => g.id == user_id)
+    console.log(user)
+
+    const model = {
+        logged_user: user
+    }
+
+    response.render("recipes.hbs", model)
+})
+
+app.get("/recipes/:id", function(request, response){
+
+    const id = request.params.id
+    const recipe = {'name':'NAME',
+                    'utensils':'UTENSILS',
+                    'allergies':'ALLERGIES'}
+
+    const model = {
+        personalizedRecipes: recipe
+    }
+
+    response.render("personalizedRecipes.hbs", model)
+})
+
 app.get("/layout.css", function(_request, response){
     response.sendFile("layout.css", {root: "."})
 })
 
-app.get("/api", function (request, response) {
+// app.get("/api", function (request, response) {
 
-    const id = request.query.id
-    const user = users.find(g => g.id == id)
+//     const id = request.query.id
+//     const user = users.find(g => g.id == id)
 
-    response.send(user)
-})
+//     response.send(user)
+// })
 
 app.listen(8080)

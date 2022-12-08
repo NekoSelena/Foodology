@@ -4,6 +4,8 @@
 @prefix dbr: <http://dbpedia.org/resource/>.
 @prefix foo: <http://example.com/owl/foodology#>.
 
+foo: a foaf:Person; foo:id ""; foo:name "".
+
 foo:has_kettle
     a owl:ObjectProperty;
     rdfs:domain <http://dbpedia.org/resource/Category:Cooking_appliances>;
@@ -43,8 +45,25 @@ foo:laurel_jones
     foo:has_stove "yes";
     foo:id "laurel_jones";
     foo:name "Laurel Jones".
-foo:peter_grant
+foo:lina_schmitt
     a foaf:Person;
+    foo:allergy_eggs "no";
+    foo:allergy_fish "yes";
+    foo:allergy_milk "no";
+    foo:allergy_peanuts "yes";
+    foo:allergy_shellfish "no";
+    foo:allergy_soybeans "no";
+    foo:allergy_treenuts "no";
+    foo:allergy_wheat "no";
+    foo:has_kettle "yes";
+    foo:has_oven "no";
+    foo:has_pan "yes";
+    foo:has_pot "no";
+    foo:has_stove "yes";
+    foo:id "lina_schmitt";
+    foo:name "Lina Schmitt".
+foo:peter_grant
+    a foaf:Person, foaf:Person;
     foo:allergy_eggs "yes";
     foo:allergy_fish "no";
     foo:allergy_milk "yes";
@@ -55,8 +74,8 @@ foo:peter_grant
     foo:allergy_wheat "yes";
     foo:has_kettle "yes";
     foo:has_oven "no";
-    foo:has_pan "no";
+    foo:has_pan "yes";
     foo:has_pot "yes";
     foo:has_stove "no";
-    foo:id "peter_grant";
-    foo:name "Peter Grant".
+    foo:id "peter_grant", "peter_grant";
+    foo:name "Peter Grant", "Peter Grant".

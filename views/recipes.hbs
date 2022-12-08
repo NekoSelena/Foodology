@@ -1,0 +1,22 @@
+<script>
+    var user = '{{logged_user}}'
+
+    function sendId() {
+        if (user == '') {
+            window.location.href='/users'
+        } else {
+            window.location.href='/recipes/{{logged_user.id}}'
+        }
+    }
+</script>
+
+<div>
+    <h1>My recipes</h1>
+    {{#if logged_user}}
+    <p>Now that you told us what you want, we can find recipes ! Click to find what to cook now :</p>
+    <button onClick="sendId()">Let's cook !</button>
+    {{else}}
+    <p>Log in first to see personalized recipes !</p>
+    <button onClick="sendId()">Log In / Register</button>
+    {{/if}}
+</div>

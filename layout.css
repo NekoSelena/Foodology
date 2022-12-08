@@ -27,16 +27,47 @@ h3{
 }
 
 main{
-	max-width: 400px;
-	margin: 1em auto;
+    display: flex;
+    align-items: center;
+    align-self: center;
+    justify-content: flex-start;
+    flex: auto;
+    flex-direction: column;
+    width: 50vw;
 	border-top: 1px solid #ddead1;
 }
 
 body{
+    display: flex;
+    align-items: center;
+    align-self: center;
+    flex-direction: column;
     background-color: #658354;
     font-family: 'Montserrat', sans-serif;
     color: #ddead1;
+    flex: auto;
     font-weight: 400;
+    height: 92vh;
+    margin-top: 3vh;
+}
+
+.user-container {
+    display: flex;
+    align-items: center;
+    align-self: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    width: 50vw;
+}
+
+#hidden_div {
+    display: flex;
+    align-items: center;
+    align-self: center;
+    justify-content: center;
+    flex: auto;
+    flex-direction: column;
+    margin-top: 10vh;
 }
 
 form {
@@ -47,6 +78,10 @@ form {
     flex: auto;
     flex-direction: column;
     gap: 3vw;
+}
+
+.preferences-form {
+    flex-direction: column-reverse !important;
 }
 
 
@@ -150,15 +185,56 @@ input[type='radio']:checked+label{
     accent-color: #658354;
 } */
 
-input[type='submit']{
+input[type='submit'], button{
     background-color: #ddead1;
     color: #658354;
     border-radius: 50px;
-    padding: 1vw 4vw;
+    padding: 0.6vw 3vw;
     border: none;
     font-weight: 700;
     font-size: 16px;
 }
+
+input[type='submit']:hover, button:hover {
+    box-shadow: inset 0 0 0 1000px #65835444;
+}
+
+.secondary-btn{
+    color: #ddead1;
+    background-color: #658354;
+    border-radius: 50px;
+    padding: 0.6vw 3vw;
+    border: 2px solid #ddead1;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.secondary-btn:hover {
+    box-shadow: inset 0 0 0 1000px #ddead144;
+}
+
+input[type="text"] {
+    background-color: #ddead1;
+    color: #658354;
+    border-radius: 20px;
+    padding: 2vh 1vw;
+    border: none;
+    font-size: 16px;
+}
+
+input[type="text"]:focus, input[type="text"]:active {
+    color: #ddead1;
+    background-color: #658354;
+    border: 2px solid #ddead1;
+}
+
+input[type="text"]:-webkit-autofill, input[type="text"]:-internal-autofill-selected {
+    box-shadow: 0 0 0 1000px #bdcfaf inset !important;
+    -webkit-box-shadow: 0 0 0 1000px #bdcfaf inset !important;
+    -webkit-text-fill-color: #658354 !important;
+    border: 2px solid #ddead1;
+}
+
 /* 
 form p {
     text-decoration: underline;
@@ -176,12 +252,17 @@ form p {
 
 footer{
 	border-top: 1px solid #ddead1;
-	max-width: 400px;
-	margin: 1em auto;
+    display: flex;
+    align-items: center;
+    align-self: center;
+    justify-content: center;
+    justify-self: flex-end;
+    flex-direction: column;
 	padding-top: 0.5em;
 	text-align: center;
     color: #ddead1;
     font-weight: 300;
+    margin-top: 5vh;
 }
 
 a{
