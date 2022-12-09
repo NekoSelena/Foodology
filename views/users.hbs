@@ -1,13 +1,20 @@
-<h1>Users :</h1>
+<div class="user-container">
+    <h1>Please enter your full name :</h1>
 
-<p>Please enter your full name :</p>
-<form>
-    <input type="text" id="fullname" name="username">
-    <input type="submit" value="Submit" onClick="Redirect()">
-</form>
+    <form>
+        <input type="text" id="fullname" name="username">
+        <input type="submit" value="Log In / Register">
+    </form>
+
+    <div id="hidden_div">
+        <p>Are you <span style="font-weight: 700; text-decoration: underline;">{{user.name}}</span> ? Click here to confirm and go to your profile :</p>
+        <button onClick="Redirect()" class="secondary-btn">Confirm</button>
+    </div>
+</div>
+
 
 <script>
     function Redirect() {
-        window.location.href='/';
+        window.location.href='/users/{{user.id}}';
     }
 </script>
