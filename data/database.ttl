@@ -28,6 +28,23 @@ foo:has_stove
     rdfs:range dbr:Stove.
 foo:id a owl:ObjectProperty.
 
+foo:jane
+    a foaf:Person;
+    foo:allergy_eggs "no";
+    foo:allergy_fish "no";
+    foo:allergy_milk "no";
+    foo:allergy_peanuts "yes";
+    foo:allergy_shellfish "no";
+    foo:allergy_soybeans "yes";
+    foo:allergy_treenuts "no";
+    foo:allergy_wheat "no";
+    foo:has_kettle "no";
+    foo:has_oven "yes";
+    foo:has_pan "yes";
+    foo:has_pot "yes";
+    foo:has_stove "yes";
+    foo:id "jane";
+    foo:name "Jane".
 foo:laurel_jones
     a foaf:Person;
     foo:allergy_eggs "yes";
@@ -63,7 +80,7 @@ foo:lina_schmitt
     foo:id "lina_schmitt";
     foo:name "Lina Schmitt".
 foo:peter_grant
-    a foaf:Person, foaf:Person;
+    a foaf:Person;
     foo:allergy_eggs "yes";
     foo:allergy_fish "no";
     foo:allergy_milk "yes";
@@ -77,5 +94,5 @@ foo:peter_grant
     foo:has_pan "yes";
     foo:has_pot "yes";
     foo:has_stove "no";
-    foo:id "peter_grant", "peter_grant";
-    foo:name "Peter Grant", "Peter Grant".
+    foo:id "peter_grant";
+    foo:name "Peter Grant".
