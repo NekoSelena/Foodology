@@ -275,3 +275,25 @@ a{
 a:focus, a:active, a:hover{
     font-weight: 700;
 }
+
+.recipe{
+    border-radius: 40px;
+    padding: 2vh 3vw;
+    min-width: 55vw;
+    border: 2px solid #ddead1;
+    margin-bottom: 4vh;
+}
+
+.recipe-content {
+    display: flex;
+    align-items: flex-start;
+    align-self: center;
+    justify-content: center;
+    flex: auto;
+    flex-direction: row;
+    gap: 2vw;
+}
+
+.recipe-thumbnail{
+    border-radius: 40px;
+}

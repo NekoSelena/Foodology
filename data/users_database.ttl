@@ -1,32 +1,5 @@
 @prefix foaf: <http://xmlns.com/foaf/0.1/>.
-@prefix owl: <http://www.w3.org/2002/07/owl#>.
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
-@prefix dbr: <http://dbpedia.org/resource/>.
 @prefix foo: <http://example.com/owl/foodology#>.
-
-foo: a foaf:Person; foo:id ""; foo:name "".
-
-foo:has_kettle
-    a owl:ObjectProperty;
-    rdfs:domain <http://dbpedia.org/resource/Category:Cooking_appliances>;
-    rdfs:range dbr:Kettle.
-foo:has_oven
-    a owl:ObjectProperty;
-    rdfs:domain <http://dbpedia.org/resource/Category:Cooking_appliances>;
-    rdfs:range dbr:Oven.
-foo:has_pan
-    a owl:ObjectProperty;
-    rdfs:domain <http://dbpedia.org/resource/Category:Cooking_appliances>;
-    rdfs:range dbr:Pan.
-foo:has_pot
-    a owl:ObjectProperty;
-    rdfs:domain <http://dbpedia.org/resource/Category:Cooking_appliances>;
-    rdfs:range dbr:Pot.
-foo:has_stove
-    a owl:ObjectProperty;
-    rdfs:domain <http://dbpedia.org/resource/Category:Cooking_appliances>;
-    rdfs:range dbr:Stove.
-foo:id a owl:ObjectProperty.
 
 foo:laurel_jones
     a foaf:Person;
@@ -38,11 +11,6 @@ foo:laurel_jones
     foo:allergy_soybeans "no";
     foo:allergy_treenuts "no";
     foo:allergy_wheat "no";
-    foo:has_kettle "yes";
-    foo:has_oven "yes";
-    foo:has_pan "no";
-    foo:has_pot "no";
-    foo:has_stove "yes";
     foo:id "laurel_jones";
     foo:name "Laurel Jones".
 foo:lina_schmitt
@@ -55,11 +23,6 @@ foo:lina_schmitt
     foo:allergy_soybeans "no";
     foo:allergy_treenuts "no";
     foo:allergy_wheat "no";
-    foo:has_kettle "yes";
-    foo:has_oven "no";
-    foo:has_pan "yes";
-    foo:has_pot "no";
-    foo:has_stove "yes";
     foo:id "lina_schmitt";
     foo:name "Lina Schmitt".
 foo:peter_grant
@@ -72,10 +35,5 @@ foo:peter_grant
     foo:allergy_soybeans "no";
     foo:allergy_treenuts "no";
     foo:allergy_wheat "yes";
-    foo:has_kettle "yes";
-    foo:has_oven "no";
-    foo:has_pan "yes";
-    foo:has_pot "yes";
-    foo:has_stove "no";
-    foo:id "peter_grant", "peter_grant";
-    foo:name "Peter Grant", "Peter Grant".
+    foo:id "peter_grant";
+    foo:name "Peter Grant".

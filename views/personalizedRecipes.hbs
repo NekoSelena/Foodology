@@ -1,7 +1,14 @@
 <h1>My recipes</h1>
 
-<div id="recipe">
-    <h2>{{personalizedRecipes.name}}</h2>
-    <p>Needs: {{personalizedRecipes.utensils}}</p>
-    <p>Contains: {{personalizedRecipes.ingredients}}</p>
-</div>
+{{#each recipes}}
+    <div id="recipe" class="recipe">
+        <h2>{{this.name}}</h2>
+        <div class="recipe-content">
+            <img class="recipe-thumbnail" src="{{this.depiction}}" alt="Recipe depiction">
+            <div>
+                <p>Recipe from : {{this.country}}</p>
+                <p>Contains : {{this.ingredients}}</p>
+            </div>
+        </div>
+    </div>
+{{/each}}

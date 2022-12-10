@@ -12,6 +12,7 @@ const $rdf = require('rdflib')
 var FOODOLOGY = $rdf.Namespace("http://example.com/owl/foodology#")
 var FOAF = $rdf.Namespace("http://xmlns.com/foaf/0.1/")
 var RDF = $rdf.Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
+var DBO = $rdf.Namespace("http://dbpedia.org/ontology/")
 
 const turtleString = fs.readFileSync('data/users_database.ttl').toString()
 const uri = "http://example.com/owl/foodology"
@@ -30,11 +31,13 @@ const stringQuery = `
     SELECT
         ?id
         ?name
-        ?stove
-        ?oven
-        ?pot
-        ?pan
-        ?kettle
+        ?asian
+        ?north_american
+        ?south_american
+        ?european
+        ?african
+        ?eurasian
+        ?oceanic
         ?milk
         ?treenuts
         ?eggs
@@ -47,11 +50,13 @@ const stringQuery = `
         ?user a <http://xmlns.com/foaf/0.1/Person> .
         ?user <http://example.com/owl/foodology#id> ?id .
         ?user <http://example.com/owl/foodology#name> ?name .
-        ?user <http://example.com/owl/foodology#has_stove> ?stove .
-        ?user <http://example.com/owl/foodology#has_oven> ?oven .
-        ?user <http://example.com/owl/foodology#has_pot> ?pot .
-        ?user <http://example.com/owl/foodology#has_pan> ?pan .
-        ?user <http://example.com/owl/foodology#has_kettle> ?kettle .
+        ?user <http://example.com/owl/foodology#likes_asian> ?asian .
+        ?user <http://example.com/owl/foodology#likes_north_american> ?north_american .
+        ?user <http://example.com/owl/foodology#likes_south_american> ?south_american .
+        ?user <http://example.com/owl/foodology#likes_european> ?european .
+        ?user <http://example.com/owl/foodology#likes_african> ?african .
+        ?user <http://example.com/owl/foodology#likes_eurasian> ?eurasian .
+        ?user <http://example.com/owl/foodology#likes_oceanic> ?oceanic .
         ?user <http://example.com/owl/foodology#allergy_milk> ?milk .
         ?user <http://example.com/owl/foodology#allergy_treenuts> ?treenuts .
         ?user <http://example.com/owl/foodology#allergy_eggs> ?eggs .
@@ -70,11 +75,13 @@ var users = users_store.querySync(query).map(
         return {
             id: userResult['?id'].value,
             name: userResult['?name'].value,
-            stove: userResult['?stove'].value,
-            oven: userResult['?oven'].value,
-            pot: userResult['?pot'].value,
-            pan: userResult['?pan'].value,
-            kettle: userResult['?kettle'].value,
+            asian: userResult['?asian'].value,
+            north_american: userResult['?north_american'].value,
+            south_american: userResult['?south_american'].value,
+            european: userResult['?european'].value,
+            african: userResult['?african'].value,
+            eurasian: userResult['?eurasian'].value,
+            oceanic: userResult['?oceanic'].value,
             milk: userResult['?milk'].value,
             treenuts: userResult['?treenuts'].value,
             eggs: userResult['?eggs'].value,
@@ -156,11 +163,13 @@ app.get("/users/:id", function(request, response){
     } else if (Object.keys(request.query).length === 0 || (users_store.anyStatementMatching($rdf.sym(new_user), null, 'yes', null) == undefined && users_store.anyStatementMatching($rdf.sym(new_user), null, 'no', null) == undefined)) {
         // console.log(users_store.anyStatementMatching($rdf.sym(new_user), null, 'no', null))
         // console.log(users_store.anyStatementMatching($rdf.sym(new_user), null, 'yes', null))
-        preferences = {['has_stove']:'no', 
-                       ['has_oven']:'no',
-                       ['has_pot']:'no',
-                       ['has_pan']:'no',
-                       ['has_kettle']:'no',
+        preferences = {['likes_asian']:'no',
+                       ['likes_north_american']:'no',
+                       ['likes_south_american']:'no',
+                       ['likes_european']:'no',
+                       ['likes_african']:'no',
+                       ['likes_eurasian']:'no',
+                       ['likes_oceanic']:'no',
                        ['allergy_milk']:'no',
                        ['allergy_treenuts']:'no',
                        ['allergy_eggs']:'no',
@@ -190,11 +199,13 @@ app.get("/users/:id", function(request, response){
             }
         });
     } else {
-        preferences = {[users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('has_stove'), null).predicate.value.replace("http://example.com/owl/foodology#", '')]:users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('has_stove'), null).object.value, 
-                       [users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('has_oven'), null).predicate.value.replace("http://example.com/owl/foodology#", '')]:users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('has_oven'), null).object.value,
-                       [users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('has_pot'), null).predicate.value.replace("http://example.com/owl/foodology#", '')]:users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('has_pot'), null).object.value,
-                       [users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('has_pan'), null).predicate.value.replace("http://example.com/owl/foodology#", '')]:users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('has_pan'), null).object.value,
-                       [users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('has_kettle'), null).predicate.value.replace("http://example.com/owl/foodology#", '')]:users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('has_kettle'), null).object.value,
+        preferences = {[users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('likes_asian'), null).predicate.value.replace("http://example.com/owl/foodology#", '')]:users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('likes_asian'), null).object.value,
+                       [users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('likes_north_american'), null).predicate.value.replace("http://example.com/owl/foodology#", '')]:users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('likes_north_american'), null).object.value,
+                       [users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('likes_south_american'), null).predicate.value.replace("http://example.com/owl/foodology#", '')]:users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('likes_south_american'), null).object.value,
+                       [users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('likes_european'), null).predicate.value.replace("http://example.com/owl/foodology#", '')]:users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('likes_european'), null).object.value,
+                       [users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('likes_african'), null).predicate.value.replace("http://example.com/owl/foodology#", '')]:users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('likes_african'), null).object.value,
+                       [users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('likes_eurasian'), null).predicate.value.replace("http://example.com/owl/foodology#", '')]:users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('likes_eurasian'), null).object.value,
+                       [users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('likes_oceanic'), null).predicate.value.replace("http://example.com/owl/foodology#", '')]:users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('likes_oceanic'), null).object.value,
                        [users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('allergy_milk'), null).predicate.value.replace("http://example.com/owl/foodology#", '')]:users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('allergy_milk'), null).object.value, 
                        [users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('allergy_treenuts'), null).predicate.value.replace("http://example.com/owl/foodology#", '')]:users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('allergy_treenuts'), null).object.value,
                        [users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('allergy_eggs'), null).predicate.value.replace("http://example.com/owl/foodology#", '')]:users_store.anyStatementMatching($rdf.sym(new_user), FOODOLOGY('allergy_eggs'), null).object.value,
@@ -251,23 +262,15 @@ app.get("/recipes", function(request, response){
     response.render("recipes.hbs", model)
 })
 
-
-var recipe = {'name':'NAME',
-              'utensils':'UTENSILS',
-              'ingredients':'INGREDIENTS'}
-
 app.get("/recipes/:id", function(request, response){
 
     const id = request.params.id
     const user = users.find(g => g.id == user_id)
-    var allergy_peanut = "?ingredients a <http://dbpedia.org/resource/Peanut>"
-    var allergy_eggs = "?ingredients a <http://dbpedia.org/resource/Egg_as_food>"
-    var allergy_treenut = "?ingredients a <http://dbpedia.org/resource/Tree_nut>"
-    var allergy_fish = "?ingredients a <http://dbpedia.org/resource/Fish>"
-    var allergy_shellfish = "?ingredients a <http://dbpedia.org/resource/Shellfish>"
-    var allergy_milk = "?ingredients a <http://dbpedia.org/resource/Milk>"
-    var allergy_soybeans = "?ingredients a <http://dbpedia.org/resource/Soybean>"
-    var allergy_wheat = "?ingredients a <http://dbpedia.org/resource/Wheat>"
+    var recipes = []
+    let asian_country = "?dishCountry <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:Countries_in_Asia>"
+    let european_country = "?dishCountry <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:Countries_in_Europe>"
+    let north_american_country = "?dishCountry <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:Countries_in_North_America>"
+    var regional_preferences = "UNION"
 
     const ParsingClient = require('sparql-http-client/ParsingClient')
 
@@ -276,50 +279,61 @@ app.get("/recipes/:id", function(request, response){
     })
 
     const query = `
-    SELECT DISTINCT ?dishName ?dish
-WHERE
-{
-    ?dish dbo:ingredient ?ingredients .
-    ?dish <http://www.w3.org/2000/01/rdf-schema#label> ?dishName .
-    FILTER (lang(?dishName) = "en") .
-    MINUS {
-        ?ingredients a <http://dbpedia.org/resource/Peanut> .
-        ?ingredients a <http://dbpedia.org/resource/Egg_as_food> .
-        ?ingredients a <http://dbpedia.org/resource/Tree_nut> .
-        ?ingredients a <http://dbpedia.org/resource/Fish> .
-        ?ingredients a <http://dbpedia.org/resource/Shellfish> .
-        ?ingredients a <http://dbpedia.org/resource/Milk> .
-        ?ingredients a <http://dbpedia.org/resource/Soybean> .
-        ?ingredients a <http://dbpedia.org/resource/Wheat> .
+    SELECT DISTINCT ?dish ?dishName ?dishDepiction ?dishCountry ?ingredients
+    WHERE
+    {
+        ?dish <http://dbpedia.org/ontology/ingredient> ?ingredients .
+        ?dish <http://dbpedia.org/ontology/thumbnail> ?dishDepiction .
+        ?dish <http://dbpedia.org/ontology/country> ?dishCountry .
+        ?dish <http://www.w3.org/2000/01/rdf-schema#label> ?dishName .
+        FILTER (lang(?dishName) = "en") .
+        ${regional_preferences}
     }
-}
 `
     client.query.select(query).then(rows => {
 
         // console.log(rows)
 
         rows.forEach(row => {
-            //request all the ingredients from FoodData Central + users_store them into array
-            recipe.name = row.dishName.value.replace('@en', '')
             recipes_store.add($rdf.sym(row.dish.value), RDF('type'), FOODOLOGY('Recipe'))
-            recipes_store.add($rdf.sym(row.dish.value), FOODOLOGY('name'), recipe.name)
+            recipes_store.add($rdf.sym(row.dish.value), FOODOLOGY('name'), row.dishName.value.replace('@en', ''))
+            recipes_store.add($rdf.sym(row.dish.value), FOAF('depiction'), row.dishDepiction.value)
+            recipes_store.add($rdf.sym(row.dish.value), DBO('country'), row.dishCountry.value.replace("http://dbpedia.org/resource/", ""))
+            recipes_store.add($rdf.sym(row.dish.value), DBO('ingredients'), row.ingredients.value.replace("http://dbpedia.org/resource/", " "))
         })
-        
     }).catch(error => {
         console.log(error)
     })
 
+    var empty = new $rdf.graph()
+
+    if (!recipes_store.sameTerm(empty)) {
+        var recipes_resources = recipes_store.match(null, RDF('type'), FOODOLOGY('Recipe')).map(st => st.subject.value)
+        recipes_resources.forEach (resource => {
+            let recipe = {}
+            recipe.resource = resource
+            recipe.name = recipes_store.match($rdf.sym(resource), FOODOLOGY('name'), null).map(st => st.object.value)
+            recipe.depiction = recipes_store.match($rdf.sym(resource), FOAF('depiction'), null).map(st => st.object.value)
+            recipe.country = recipes_store.match($rdf.sym(resource), DBO('country'), null).map(st => st.object.value.replace('_', ' '))
+            recipe.ingredients = recipes_store.match($rdf.sym(resource), DBO('ingredients'), null).map(st => st.object.value.replace('_', ' '))
+            // console.log(recipe)
+            recipes.push(recipe)
+        })
+        // console.log(recipes)
+    }
+
     let content = $rdf.serialize(undefined, recipes_store, null, 'text/turtle')
+    let filename = 'data/recipes_database_' + id + '.ttl'
 
     // add the recipes to the recipes_database (turtle file)
-    fs.writeFile('data/recipes_database.ttl', content, err => {
+    fs.writeFile(filename, content, err => {
         if (err) {
             console.error(err);
         }
     });
 
     const model = {
-        personalizedRecipes: recipe
+        recipes: recipes
     }
 
     response.render("personalizedRecipes.hbs", model)
