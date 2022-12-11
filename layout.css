@@ -277,17 +277,28 @@ a:focus, a:active, a:hover{
 }
 
 .recipe{
+    display: flex;
+    flex-direction: column;
+    margin-top: 3vw;
     border-radius: 40px;
     padding: 2vh 3vw;
     min-width: 55vw;
     border: 2px solid #ddead1;
-    margin-bottom: 4vh;
+}
+
+.recipe a{
+    text-decoration: underline;
+    font-weight: 400;
+}
+
+.recipe a:hover{
+    font-weight: inherit;
 }
 
 .recipe-content {
     display: flex;
     align-items: flex-start;
-    align-self: center;
+    align-self: flex-start;
     justify-content: center;
     flex: auto;
     flex-direction: row;

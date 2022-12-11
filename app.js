@@ -341,7 +341,6 @@ app.get("/recipes/:id", function(request, response){
         if (recipes_store.anyStatementMatching(null, RDF('type'), FOODOLOGY('Recipe')) != undefined) {
             while (recipes_store.statementsMatching(null, RDF('type'), FOODOLOGY('Recipe')).length != 0) {
                 recipes_store.remove(recipes_store.anyStatementMatching(null, RDF('type'), FOODOLOGY('Recipe')))
-                console.log(recipes_store.statementsMatching(null, RDF('type'), FOODOLOGY('Recipe')).length)
             }
         }
 
