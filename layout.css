@@ -85,7 +85,7 @@ form {
 }
 
 
-.kitchen-container, .allergies-container {
+.regional-container, .allergies-container {
     display: flex;
     flex: 1 1 30%;
     align-self: center;
@@ -102,7 +102,7 @@ form {
     margin-left: 1vw;
 }
 
-.kitchen-container>*, .allergies-container>* {
+.regional-container>*, .allergies-container>* {
     margin: 2vw;
     display: flex;
     flex-direction: column;
@@ -111,7 +111,7 @@ form {
     align-content: center;
 }
 
-.kitchen_tools, .allergies {
+.regional_preferences, .allergies {
     display: flex;
     align-items: center;
     align-self: flex-start;
@@ -286,4 +286,37 @@ a{
 
 a:focus, a:active, a:hover{
     font-weight: 700;
+}
+
+.recipe{
+    display: flex;
+    flex-direction: column;
+    margin-top: 3vw;
+    border-radius: 40px;
+    padding: 2vh 3vw;
+    min-width: 55vw;
+    border: 2px solid #ddead1;
+}
+
+.recipe a{
+    text-decoration: underline;
+    font-weight: 400;
+}
+
+.recipe a:hover{
+    font-weight: inherit;
+}
+
+.recipe-content {
+    display: flex;
+    align-items: flex-start;
+    align-self: flex-start;
+    justify-content: center;
+    flex: auto;
+    flex-direction: row;
+    gap: 2vw;
+}
+
+.recipe-thumbnail{
+    border-radius: 40px;
 }

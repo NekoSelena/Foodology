@@ -1,54 +1,63 @@
-<h1>Welcome <span style="text-decoration: underline;">{{user.name}}</span>!</h1>
+<h1>Welcome <safrican style="text-decoration: underline;">{{user.name}}</safrican>!</h1>
 <h2>Your cooking preferences</h2>
 <br>
 <form class="preferences-form">
     <div class="form-container">
-        <div class="kitchen_tools">
-            <h3>Your kitchen :</h3>
-            <div class="kitchen-container">
+        <div class="regional_preferences">
+            <h3>Your preferences :</h3>
+            <div class="regional-container">
                 <div>
-                    <p>Stove :</p>
+                    <p>Asian food :</p>
                     <div class="radio-container">
-                        <input type="radio" id="stove_yes" class="check_yes" name="has_stove" value="yes">
-                        <label class="form-control" for="stove">yes</label>
-                        <input type="radio" id="stove_no" class="check_no" name="has_stove" value="no">
-                        <label class="form-control" for="stove">no</label>
+                        <input type="radio" id="asian_yes" class="check_yes" name="likes_asian" value="yes">
+                        <label class="form-control" for="asian">yes</label>
+                        <input type="radio" id="asian_no" class="check_no" name="likes_asian" value="no">
+                        <label class="form-control" for="asian">no</label>
                     </div>
                 </div>
                 <div>
-                    <p>Oven :</p>
+                    <p>North American food :</p>
                     <div class="radio-container">
-                        <input type="radio" id="oven_yes" class="check_yes" name="has_oven" value="yes">
-                        <label class="form-control" for="oven">yes</label>
-                        <input type="radio" id="oven_no" class="check_no" name="has_oven" value="no">
-                        <label class="form-control" for="oven">no</label>
+                        <input type="radio" id="north_american_yes" class="check_yes" name="likes_north_american" value="yes">
+                        <label class="form-control" for="north_american">yes</label>
+                        <input type="radio" id="north_american_no" class="check_no" name="likes_north_american" value="no">
+                        <label class="form-control" for="north_american">no</label>
                     </div>
                 </div>
                 <div>
-                    <p>Pot :</p>
+                    <p>South American food :</p>
                     <div class="radio-container">
-                        <input type="radio" id="pot_yes" class="check_yes" name="has_pot" value="yes">
-                        <label class="form-control" for="pot">yes</label>
-                        <input type="radio" id="pot_no" class="check_no" name="has_pot" value="no">
-                        <label class="form-control" for="pot">no</label>
+                        <input type="radio" id="south_american_yes" class="check_yes" name="likes_south_american" value="yes">
+                        <label class="form-control" for="south_american">yes</label>
+                        <input type="radio" id="south_american_no" class="check_no" name="likes_south_american" value="no">
+                        <label class="form-control" for="south_american">no</label>
                     </div>
                 </div>
                 <div>
-                    <p>Pan :</p>
+                    <p>African food :</p>
                     <div class="radio-container">
-                        <input type="radio" id="pan_yes" class="check_yes" name="has_pan" value="yes">
-                        <label class="form-control" for="pan">yes</label>
-                        <input type="radio" id="pan_no" class="check_no" name="has_pan" value="no">
-                        <label class="form-control" for="pan">no</label>
+                        <input type="radio" id="african_yes" class="check_yes" name="likes_african" value="yes">
+                        <label class="form-control" for="african">yes</label>
+                        <input type="radio" id="african_no" class="check_no" name="likes_african" value="no">
+                        <label class="form-control" for="african">no</label>
                     </div>
                 </div>
                 <div>
-                    <p>Kettle :</p>
+                    <p>European food :</p>
                     <div class="radio-container">
-                        <input type="radio" id="kettle_yes" class="check_yes" name="has_kettle" value="yes">
-                        <label class="form-control" for="kettle">yes</label>
-                        <input type="radio" id="kettle_no" class="check_no" name="has_kettle" value="no">
-                        <label class="form-control" for="kettle">no</label>
+                        <input type="radio" id="european_yes" class="check_yes" name="likes_european" value="yes">
+                        <label class="form-control" for="european">yes</label>
+                        <input type="radio" id="european_no" class="check_no" name="likes_european" value="no">
+                        <label class="form-control" for="european">no</label>
+                    </div>
+                </div>
+                <div>
+                    <p>Oceanic food :</p>
+                    <div class="radio-container">
+                        <input type="radio" id="oceanic_yes" class="check_yes" name="likes_oceanic" value="yes">
+                        <label class="form-control" for="oceanic">yes</label>
+                        <input type="radio" id="oceanic_no" class="check_no" name="likes_oceanic" value="no">
+                        <label class="form-control" for="oceanic">no</label>
                     </div>
                 </div>
             </div>
@@ -137,11 +146,12 @@
 
 <script>
     // keep the radio button checked
-    document.getElementById('stove_' + "{{preferences.has_stove}}").checked = true
-    document.getElementById('oven_' + "{{preferences.has_oven}}").checked = true
-    document.getElementById('pot_' + "{{preferences.has_pot}}").checked = true
-    document.getElementById('pan_' + "{{preferences.has_pan}}").checked = true
-    document.getElementById('kettle_' + "{{preferences.has_kettle}}").checked = true
+    document.getElementById('asian_' + "{{preferences.likes_asian}}").checked = true
+    document.getElementById('north_american_' + "{{preferences.likes_north_american}}").checked = true
+    document.getElementById('south_american_' + "{{preferences.likes_south_american}}").checked = true
+    document.getElementById('african_' + "{{preferences.likes_african}}").checked = true
+    document.getElementById('european_' + "{{preferences.likes_european}}").checked = true
+    document.getElementById('oceanic_' + "{{preferences.likes_oceanic}}").checked = true
     document.getElementById('milk_' + "{{preferences.allergy_milk}}").checked = true
     document.getElementById('treenuts_' + "{{preferences.allergy_treenuts}}").checked = true
     document.getElementById('eggs_' + "{{preferences.allergy_eggs}}").checked = true

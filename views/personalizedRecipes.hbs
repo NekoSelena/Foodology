@@ -1,7 +1,33 @@
 <h1>My recipes</h1>
 
-<div id="recipe">
-    <h2>{{personalizedRecipes.name}}</h2>
-    <p>Needs: {{personalizedRecipes.utensils}}</p>
-    <p>Contains: {{personalizedRecipes.ingredients}}</p>
-</div>
+<p>If nothing shows here, try clicking on this button :</p>
+<button onclick="Refresh()">Refresh</button>
+<br/>
+
+{{#each recipes}}
+    <div id="recipe" class="recipe">
+        <h2>{{this.name}}</h2>
+        <div class="recipe-content">
+            <img class="recipe-thumbnail" src="{{this.depiction}}" alt="{{this.name}} depiction">
+            <div>
+                <p>Recipe from : {{this.country}}</p>
+                <p>Contains mainly : {{this.ingredients}}</p>
+                <a href="{{this.resource}}">> More information about <span style="font-weight: 700;">{{this.name}}</span></a>
+            </div>
+        </div>
+    </div>
+{{/each}}
+
+<script>
+
+    window.onload = function() {
+        if(!window.location.hash) {
+            window.location = window.location + '#1';
+            window.location.reload();
+        }
+    }
+
+    function Refresh() {
+        window.location.reload();
+    }
+</script>
