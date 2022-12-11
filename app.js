@@ -90,7 +90,7 @@ var users = users_store.querySync(query).map(
     }
 )
 
-console.log("Ready to use.")
+console.log("--------------------- Ready to use. ----------------------\n--                                                      --\n--You can now open http://localhost:8080 on your browser--\n--                                                      --\n----------------------------------------------------------")
 
 app.get("/", function(_request,response){
     response.render("start.hbs")
