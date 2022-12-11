@@ -1,39 +1,21 @@
 @prefix foaf: <http://xmlns.com/foaf/0.1/>.
 @prefix foo: <http://example.com/owl/foodology#>.
 
-foo:laurel_jones
-    a foaf:Person;
-    foo:allergy_eggs "yes";
-    foo:allergy_fish "no";
-    foo:allergy_milk "no";
-    foo:allergy_peanuts "no";
-    foo:allergy_shellfish "no";
-    foo:allergy_soybeans "no";
-    foo:allergy_treenuts "no";
-    foo:allergy_wheat "no";
-    foo:id "laurel_jones";
-    foo:name "Laurel Jones".
-foo:lina_schmitt
-    a foaf:Person;
-    foo:allergy_eggs "no";
-    foo:allergy_fish "yes";
-    foo:allergy_milk "no";
-    foo:allergy_peanuts "yes";
-    foo:allergy_shellfish "no";
-    foo:allergy_soybeans "no";
-    foo:allergy_treenuts "no";
-    foo:allergy_wheat "no";
-    foo:id "lina_schmitt";
-    foo:name "Lina Schmitt".
 foo:peter_grant
     a foaf:Person, foaf:Person;
     foo:allergy_eggs "yes";
     foo:allergy_fish "no";
     foo:allergy_milk "yes";
     foo:allergy_peanuts "no";
-    foo:allergy_shellfish "no";
+    foo:allergy_shellfish "yes";
     foo:allergy_soybeans "no";
     foo:allergy_treenuts "no";
-    foo:allergy_wheat "yes";
-    foo:id "peter_grant";
-    foo:name "Peter Grant".
+    foo:allergy_wheat "no";
+    foo:id "peter_grant", "peter_grant";
+    foo:likes_african "no";
+    foo:likes_asian "no";
+    foo:likes_european "yes";
+    foo:likes_north_american "no";
+    foo:likes_oceanic "no";
+    foo:likes_south_american "no";
+    foo:name "Peter Grant", "Peter Grant".

@@ -1,10 +1,14 @@
 <h1>My recipes</h1>
 
+<p>If nothing shows here, try clicking on this button :</p>
+<button onclick="Refresh()">Refresh</button>
+<br/>
+
 {{#each recipes}}
     <div id="recipe" class="recipe">
         <h2>{{this.name}}</h2>
         <div class="recipe-content">
-            <img class="recipe-thumbnail" src="{{this.depiction}}" alt="Recipe depiction">
+            <img class="recipe-thumbnail" src="{{this.depiction}}" alt="{{this.name}} depiction">
             <div>
                 <p>Recipe from : {{this.country}}</p>
                 <p>Contains : {{this.ingredients}}</p>
@@ -12,3 +16,17 @@
         </div>
     </div>
 {{/each}}
+
+<script>
+
+    window.onload = function() {
+        if(!window.location.hash) {
+            window.location = window.location + '#1';
+            window.location.reload();
+        }
+    }
+
+    function Refresh() {
+        window.location.reload();
+    }
+</script>
