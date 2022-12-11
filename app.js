@@ -383,7 +383,7 @@ app.get("/recipes/:id", async function(request, response){
     })
     
     var empty = new $rdf.graph()
-    
+
     if (!recipes_store.sameTerm(empty)) {
         var recipes_resources = recipes_store.match(null, RDF('type'), FOODOLOGY('Recipe')).map(st => st.subject.value)
         // console.log(recipes_resources)
@@ -425,27 +425,19 @@ app.get("/recipes/:id", async function(request, response){
                         recipe.allergy_tag = true
                     }
                 })
-                // console.log("--------------------------End of forEach--------------------------")
             })
             if (recipe.ingredients != undefined) {
                 recipes.push(recipe)
                 for (let i = 0; i < recipes.length; i++) {
                     if (recipes[i] != undefined) {
-                        // console.log("------ Name is " + recipes[i]['name'].toString().localeCompare(recipe.name.toString()) + " but tag : " + recipe.allergy_tag + " ------")
                         if ((recipe.allergy_tag == undefined || recipe.allergy_tag == false) && recipes[i]['name'].toString().localeCompare(recipe.name.toString()) != 0) {
-                            // console.log(recipes[i]['name'].toString().localeCompare(recipe.name.toString()) + " & ingredient is " + recipe.ingredients[i].toString().localeCompare(ingredient))
-                            // console.log(recipe.name)
                             recipes.push(recipe)
-                            // console.log(recipes)
                         }
                     }
                 }
             }
-            
-            console.log(recipes)
-    
             let content = $rdf.serialize(undefined, recipes_store, null, 'text/turtle')
-        
+
             // add the recipes to the recipes_database (turtle file)
             fs.writeFile(filename, content, err => {
                 if (err) {
@@ -453,15 +445,17 @@ app.get("/recipes/:id", async function(request, response){
                 }
             });
         
+            console.log(recipes)
+
             const model = {
                 recipes: recipes
             }
-        })
-        response.render("personalizedRecipes.hbs", model)
-        return
-    }
 
-    response.render("personalizedRecipes.hbs")
+            response.render("personalizedRecipes.hbs", model).catch(err => {console.error(err)})
+        })
+    } else {
+        response.render("personalizedRecipes.hbs")
+    }
 })
 
 app.get("/layout.css", function(_request, response){
