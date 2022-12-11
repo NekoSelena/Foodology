@@ -463,6 +463,7 @@ app.get("/layout.css", function(_request, response){
 })
 
 app.listen(8080)
+app.use('/favicon.ico', express.static('images/favicon.ico'))
 
 async function requestFDCapi(name) {
     let apikey = "JedXhk6Hs9aiddbO6jnbO1fvSf4JNdXDRLiDv7kS"
