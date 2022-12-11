@@ -246,15 +246,16 @@ app.get("/recipes", function(request, response){
 
     const user = users.find(g => g.id == user_id)
     // console.log(user)
-
+    
     const model = {
         logged_user: user
     }
-
+    
     response.render("recipes.hbs", model)
 })
 
 const recipes_store = $rdf.graph()
+var recipes = []
 
 app.get("/recipes/:id", async function(request, response){
 
@@ -382,73 +383,85 @@ app.get("/recipes/:id", async function(request, response){
     })
     
     var empty = new $rdf.graph()
-    let recipes = []
     
     if (!recipes_store.sameTerm(empty)) {
         var recipes_resources = recipes_store.match(null, RDF('type'), FOODOLOGY('Recipe')).map(st => st.subject.value)
         // console.log(recipes_resources)
-        while (recipes.pop() != undefined) {
-            recipes.pop()
+        if (recipes != undefined) {
+            while (recipes.pop() != undefined) {
+                recipes.pop()
+            }
         }
 
-        //recipes_resources.forEach (async resource => {
+
+        recipes_resources.forEach (async resource => {
             var recipe = {}
-            let resource_name = recipes_store.match($rdf.sym("http://dbpedia.org/resource/Chickpea_bread"), FOODOLOGY('name'), null).map(st => st.object.value)
-            recipes = await requestFDCapi(resource_name[0]).then(res => {
-                res.forEach(ingredient => {
-                    allergies_user.forEach(allergy => {
-                        // console.log(ingredient.toLowerCase() + " contains " + allergy.toLowerCase() + " = " + ingredient.toLowerCase().includes(allergy.toLowerCase()) + ", but the tag is " + recipe.allergy_tag)
-                        if (recipe.allergy_tag == true || ingredient.toLowerCase().includes(allergy.toLowerCase())) {
-                            recipe.allergy_tag = true
-                        } else if (!ingredient.toLowerCase().includes(allergy.toLowerCase())) {
-                            recipes_store.add($rdf.sym("http://dbpedia.org/resource/Chickpea_bread"), DBO('ingredients'), ingredient)
-                            recipe.resource = "http://dbpedia.org/resource/Chickpea_bread"
-                            recipe.name = resource_name
-                            recipe.depiction = recipes_store.match($rdf.sym("http://dbpedia.org/resource/Chickpea_bread"), FOAF('depiction'), null).map(st => st.object.value)
-                            recipe.country = recipes_store.match($rdf.sym("http://dbpedia.org/resource/Chickpea_bread"), DBO('country'), null).map(st => st.object.value.replace('_', ' '))
-                            recipe.ingredients = res
-                            recipe.allergies = allergies_user
-                            recipe.allergy_tag = false
-                        } else if (recipe.allergy_tag == undefined && !ingredient.toLowerCase().includes(allergy.toLowerCase())) {
-                            recipes_store.remove(recipes_store.statementsMatching($rdf.sym("http://dbpedia.org/resource/Chickpea_bread"), DBO('ingredients'), null))
-                            recipes_store.add($rdf.sym("http://dbpedia.org/resource/Chickpea_bread"), DBO('ingredients'), "Unknown")
-                            recipe.resource = "http://dbpedia.org/resource/Chickpea_bread"
-                            recipe.name = resource_name
-                            recipe.depiction = recipes_store.match($rdf.sym("http://dbpedia.org/resource/Chickpea_bread"), FOAF('depiction'), null).map(st => st.object.value)
-                            recipe.country = recipes_store.match($rdf.sym("http://dbpedia.org/resource/Chickpea_bread"), DBO('country'), null).map(st => st.object.value.replace('_', ' '))
-                            recipe.ingredients = [ "Unknown" ]
-                            recipe.allergies = allergies_user
-                        } else {
-                            recipe.allergy_tag = true
-                        }
-                    })
+            let resource_name = recipes_store.match($rdf.sym(resource), FOODOLOGY('name'), null).map(st => st.object.value)
+            let res = await requestFDCapi(resource_name)
+            res.forEach(ingredient => {
+                allergies_user.forEach(allergy => {
+                    // console.log(ingredient.toLowerCase() + " contains " + allergy.toLowerCase() + " = " + ingredient.toLowerCase().includes(allergy.toLowerCase()) + ", but the tag is " + recipe.allergy_tag)
+                    if (recipe.allergy_tag == true || ingredient.toLowerCase().includes(allergy.toLowerCase())) {
+                        recipe.allergy_tag = true
+                    } else if (!ingredient.toLowerCase().includes(allergy.toLowerCase())) {
+                        recipes_store.add($rdf.sym(resource), DBO('ingredients'), ingredient)
+                        recipe.resource = resource
+                        recipe.name = resource_name
+                        recipe.depiction = recipes_store.match($rdf.sym(resource), FOAF('depiction'), null).map(st => st.object.value)
+                        recipe.country = recipes_store.match($rdf.sym(resource), DBO('country'), null).map(st => st.object.value.replace('_', ' '))
+                        recipe.ingredients = res
+                        recipe.allergies = allergies_user
+                        recipe.allergy_tag = false
+                    } else if (recipe.allergy_tag == undefined && !ingredient.toLowerCase().includes(allergy.toLowerCase())) {
+                        recipes_store.remove(recipes_store.statementsMatching($rdf.sym(resource), DBO('ingredients'), null))
+                        recipes_store.add($rdf.sym(resource), DBO('ingredients'), "Unknown")
+                        recipe.resource = resource
+                        recipe.name = resource_name
+                        recipe.depiction = recipes_store.match($rdf.sym(resource), FOAF('depiction'), null).map(st => st.object.value)
+                        recipe.country = recipes_store.match($rdf.sym(resource), DBO('country'), null).map(st => st.object.value.replace('_', ' '))
+                        recipe.ingredients = [ "Unknown" ]
+                        recipe.allergies = allergies_user
+                    } else {
+                        recipe.allergy_tag = true
+                    }
                 })
-                if (Object.values(recipe) != 0 && (recipe.allergy_tag == undefined || recipe.allergy_tag == false)) {
-                    console.log(recipe.name)
-                    recipes_buff.push(recipe)
-                }
-                return recipes_buff
-            }).catch(error => {
-                //console.error(error)
+                // console.log("--------------------------End of forEach--------------------------")
             })
-        //})
+            if (recipe.ingredients != undefined) {
+                recipes.push(recipe)
+                for (let i = 0; i < recipes.length; i++) {
+                    if (recipes[i] != undefined) {
+                        // console.log("------ Name is " + recipes[i]['name'].toString().localeCompare(recipe.name.toString()) + " but tag : " + recipe.allergy_tag + " ------")
+                        if ((recipe.allergy_tag == undefined || recipe.allergy_tag == false) && recipes[i]['name'].toString().localeCompare(recipe.name.toString()) != 0) {
+                            // console.log(recipes[i]['name'].toString().localeCompare(recipe.name.toString()) + " & ingredient is " + recipe.ingredients[i].toString().localeCompare(ingredient))
+                            // console.log(recipe.name)
+                            recipes.push(recipe)
+                            // console.log(recipes)
+                        }
+                    }
+                }
+            }
+            
+            console.log(recipes)
+    
+            let content = $rdf.serialize(undefined, recipes_store, null, 'text/turtle')
+        
+            // add the recipes to the recipes_database (turtle file)
+            fs.writeFile(filename, content, err => {
+                if (err) {
+                    console.error(err);
+                }
+            });
+        
+            const model = {
+                recipes: recipes
+            }
+        })
+        response.render("personalizedRecipes.hbs", model)
+        return
     }
-    console.log(recipes)
 
-    let content = $rdf.serialize(undefined, recipes_store, null, 'text/turtle')
-
-    // add the recipes to the recipes_database (turtle file)
-    fs.writeFile(filename, content, err => {
-        if (err) {
-            console.error(err);
-        }
-    });
-
-    const model = {
-        recipes: recipes
-    }
-
-    response.render("personalizedRecipes.hbs", model)
+    response.render("personalizedRecipes.hbs")
 })
 
 app.get("/layout.css", function(_request, response){
@@ -463,8 +476,10 @@ async function requestFDCapi(name) {
     let res = await fetch(requestUrl + "?query=" + name + "&dataType=&pageSize=1&api_key=" + apikey)
     let ingredients = []
     let data = await res.json()
-    data.foods[0].finalFoodInputFoods.forEach(each => {
-        ingredients.push(each.foodDescription.split(", ")[0])
-    })
+    if (data.foods.length != 0) {
+        data.foods[0].finalFoodInputFoods.forEach(each => {
+            ingredients.push(each.foodDescription.split(", ")[0])
+        })
+    }
     return ingredients
 }
