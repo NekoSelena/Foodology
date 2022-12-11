@@ -78,14 +78,14 @@ var users = users_store.querySync(query).map(
             likes_european: userResult['?likes_european'].value,
             likes_african: userResult['?likes_african'].value,
             likes_oceanic: userResult['?likes_oceanic'].value,
-            milk: userResult['?milk'].value,
-            treenuts: userResult['?treenuts'].value,
-            eggs: userResult['?eggs'].value,
-            peanuts: userResult['?peanuts'].value,
-            fish: userResult['?fish'].value,
-            shellfish: userResult['?shellfish'].value,
-            wheat: userResult['?wheat'].value,
-            soybeans: userResult['?soybeans'].value
+            allergy_milk: userResult['?milk'].value,
+            allergy_treenuts: userResult['?treenuts'].value,
+            allergy_eggs: userResult['?eggs'].value,
+            allergy_peanuts: userResult['?peanuts'].value,
+            allergy_fish: userResult['?fish'].value,
+            allergy_shellfish: userResult['?shellfish'].value,
+            allergy_wheat: userResult['?wheat'].value,
+            allergy_soybeans: userResult['?soybeans'].value
         }
     }
 )
@@ -256,12 +256,11 @@ app.get("/recipes", function(request, response){
 
 const recipes_store = $rdf.graph()
 
-app.get("/recipes/:id", function(request, response){
+app.get("/recipes/:id", async function(request, response){
 
     const id = request.params.id
     const user = users.find(g => g.id == id)
     let filename = 'data/recipes_database_' + id + '.ttl'
-    var recipes = []
     let likes_asian = "?dishCountry <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:Countries_in_Asia>"
     let likes_european = "?dishCountry <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:Countries_in_Europe>"
     let likes_north_american = "?dishCountry <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:Countries_in_North_America>"
@@ -270,18 +269,20 @@ app.get("/recipes/:id", function(request, response){
     let likes_oceanic = "?dishCountry <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:Countries_in_Oceania>"
     var regional_preferences_filter = ""
     let regional_preferences_user = []
-
+    let allergies_user = []
+    
     fs.writeFile(filename, '', err => {
         if (err) {
             console.error(err);
         }
     });
-
+    
     // console.log(user)
-
+    
     for (const [key, value] of Object.entries(user)) {
         let preference = users_store.match(null, FOODOLOGY(key), 'yes').map(st => key)
         // console.log(preference)
+        // console.log('--------------------------------')
         if (preference.length != 0) {
             switch (key) {
                 case "likes_asian":
@@ -299,17 +300,41 @@ app.get("/recipes/:id", function(request, response){
                 case "likes_south_american":
                     regional_preferences_user.push(likes_south_american)
                     break;
-                case "likes_oceanic":
-                    regional_preferences_user.push(likes_oceanic)
+                    case "likes_oceanic":
+                        regional_preferences_user.push(likes_oceanic)
+                        break;
+                case "allergy_eggs":
+                    allergies_user.push("Egg")
                     break;
-                default:
+                    case "allergy_milk":
+                        allergies_user.push("Milk")
+                        break;
+                        case "allergy_peanuts":
+                            allergies_user.push("Peanut")
+                            break;
+                case "allergy_treenuts":
+                    allergies_user.push("Nut")
                     break;
-            }
+                    case "allergy_fish":
+                    allergies_user.push("Fish")
+                    break;
+                    case "allergy_shellfish":
+                    allergies_user.push("Shellfish")
+                    break;
+                case "allergy_wheat":
+                    allergies_user.push("Wheat")
+                    break;
+                case "allergy_soybeans":
+                    allergies_user.push("Soybean")
+                    break;
+                    default:
+                        break;
+                    }
         }
     }
     // console.log(regional_preferences_user)
     let buff = "{ " + regional_preferences_user.join(" } UNION { ") + " }"
-
+    
     if (buff != "{  }") {
         //console.log(buff)
         regional_preferences_filter = buff
@@ -321,9 +346,9 @@ app.get("/recipes/:id", function(request, response){
     const client = new ParsingClient({
         endpointUrl: 'https://dbpedia.org/sparql'
     })
-
+    
     const query = `
-    SELECT DISTINCT ?dish ?dishName ?dishDepiction ?dishCountry ?ingredients
+    SELECT DISTINCT ?dish ?dishName ?dishDepiction ?dishCountry
     WHERE
     {
         ?dish <http://dbpedia.org/ontology/ingredient> ?ingredients .
@@ -332,48 +357,83 @@ app.get("/recipes/:id", function(request, response){
         ?dish <http://www.w3.org/2000/01/rdf-schema#label> ?dishName .
         FILTER (lang(?dishName) = "en") .
         ${regional_preferences_filter}
-    } LIMIT 200
-`
+    } LIMIT 50
+    `
 
     client.query.select(query).then(rows => {
-        // console.log(rows)
 
+        // console.log(rows)
+        
         if (recipes_store.anyStatementMatching(null, RDF('type'), FOODOLOGY('Recipe')) != undefined) {
             while (recipes_store.statementsMatching(null, RDF('type'), FOODOLOGY('Recipe')).length != 0) {
                 recipes_store.remove(recipes_store.anyStatementMatching(null, RDF('type'), FOODOLOGY('Recipe')))
             }
         }
-
+        
         rows.forEach(row => {
             recipes_store.add($rdf.sym(row.dish.value), RDF('type'), FOODOLOGY('Recipe'))
             recipes_store.add($rdf.sym(row.dish.value), FOODOLOGY('name'), row.dishName.value.replace('@en', ''))
             recipes_store.add($rdf.sym(row.dish.value), FOAF('depiction'), row.dishDepiction.value)
             recipes_store.add($rdf.sym(row.dish.value), DBO('country'), row.dishCountry.value.replace("http://dbpedia.org/resource/", ""))
-            recipes_store.add($rdf.sym(row.dish.value), DBO('ingredients'), row.ingredients.value.replace("http://dbpedia.org/resource/", " "))
         })
+        
     }).catch(error => {
         console.log(error)
     })
-
+    
     var empty = new $rdf.graph()
-
+    let recipes = []
+    
     if (!recipes_store.sameTerm(empty)) {
         var recipes_resources = recipes_store.match(null, RDF('type'), FOODOLOGY('Recipe')).map(st => st.subject.value)
+        // console.log(recipes_resources)
         while (recipes.pop() != undefined) {
             recipes.pop()
         }
-        recipes_resources.forEach (resource => {
-            let recipe = {}
-            recipe.resource = resource
-            recipe.name = recipes_store.match($rdf.sym(resource), FOODOLOGY('name'), null).map(st => st.object.value)
-            recipe.depiction = recipes_store.match($rdf.sym(resource), FOAF('depiction'), null).map(st => st.object.value)
-            recipe.country = recipes_store.match($rdf.sym(resource), DBO('country'), null).map(st => st.object.value.replace('_', ' '))
-            recipe.ingredients = recipes_store.match($rdf.sym(resource), DBO('ingredients'), null).map(st => st.object.value.replace('_', ' '))
-            // console.log(recipe)
-            recipes.push(recipe)
-        })
-        // console.log(recipes)
+
+        //recipes_resources.forEach (async resource => {
+            var recipe = {}
+            let resource_name = recipes_store.match($rdf.sym("http://dbpedia.org/resource/Chickpea_bread"), FOODOLOGY('name'), null).map(st => st.object.value)
+            recipes = await requestFDCapi(resource_name[0]).then(res => {
+                res.forEach(ingredient => {
+                    allergies_user.forEach(allergy => {
+                        // console.log(ingredient.toLowerCase() + " contains " + allergy.toLowerCase() + " = " + ingredient.toLowerCase().includes(allergy.toLowerCase()) + ", but the tag is " + recipe.allergy_tag)
+                        if (recipe.allergy_tag == true || ingredient.toLowerCase().includes(allergy.toLowerCase())) {
+                            recipe.allergy_tag = true
+                        } else if (!ingredient.toLowerCase().includes(allergy.toLowerCase())) {
+                            recipes_store.add($rdf.sym("http://dbpedia.org/resource/Chickpea_bread"), DBO('ingredients'), ingredient)
+                            recipe.resource = "http://dbpedia.org/resource/Chickpea_bread"
+                            recipe.name = resource_name
+                            recipe.depiction = recipes_store.match($rdf.sym("http://dbpedia.org/resource/Chickpea_bread"), FOAF('depiction'), null).map(st => st.object.value)
+                            recipe.country = recipes_store.match($rdf.sym("http://dbpedia.org/resource/Chickpea_bread"), DBO('country'), null).map(st => st.object.value.replace('_', ' '))
+                            recipe.ingredients = res
+                            recipe.allergies = allergies_user
+                            recipe.allergy_tag = false
+                        } else if (recipe.allergy_tag == undefined && !ingredient.toLowerCase().includes(allergy.toLowerCase())) {
+                            recipes_store.remove(recipes_store.statementsMatching($rdf.sym("http://dbpedia.org/resource/Chickpea_bread"), DBO('ingredients'), null))
+                            recipes_store.add($rdf.sym("http://dbpedia.org/resource/Chickpea_bread"), DBO('ingredients'), "Unknown")
+                            recipe.resource = "http://dbpedia.org/resource/Chickpea_bread"
+                            recipe.name = resource_name
+                            recipe.depiction = recipes_store.match($rdf.sym("http://dbpedia.org/resource/Chickpea_bread"), FOAF('depiction'), null).map(st => st.object.value)
+                            recipe.country = recipes_store.match($rdf.sym("http://dbpedia.org/resource/Chickpea_bread"), DBO('country'), null).map(st => st.object.value.replace('_', ' '))
+                            recipe.ingredients = [ "Unknown" ]
+                            recipe.allergies = allergies_user
+                        } else {
+                            recipe.allergy_tag = true
+                        }
+                    })
+                })
+                if (Object.values(recipe) != 0 && (recipe.allergy_tag == undefined || recipe.allergy_tag == false)) {
+                    console.log(recipe.name)
+                    recipes_buff.push(recipe)
+                }
+                return recipes_buff
+            }).catch(error => {
+                //console.error(error)
+            })
+        //})
     }
+    console.log(recipes)
 
     let content = $rdf.serialize(undefined, recipes_store, null, 'text/turtle')
 
@@ -396,3 +456,15 @@ app.get("/layout.css", function(_request, response){
 })
 
 app.listen(8080)
+
+async function requestFDCapi(name) {
+    let apikey = "JedXhk6Hs9aiddbO6jnbO1fvSf4JNdXDRLiDv7kS"
+    let requestUrl = "https://api.nal.usda.gov/fdc/v1/foods/search"
+    let res = await fetch(requestUrl + "?query=" + name + "&dataType=&pageSize=1&api_key=" + apikey)
+    let ingredients = []
+    let data = await res.json()
+    data.foods[0].finalFoodInputFoods.forEach(each => {
+        ingredients.push(each.foodDescription.split(", ")[0])
+    })
+    return ingredients
+}
