@@ -282,8 +282,6 @@ app.get("/recipes/:id", async function(request, response){
     
     for (const [key, value] of Object.entries(user)) {
         let preference = users_store.match(null, FOODOLOGY(key), 'yes').map(st => key)
-        // console.log(preference)
-        // console.log('--------------------------------')
         if (preference.length != 0) {
             switch (key) {
                 case "likes_asian":
@@ -358,7 +356,7 @@ app.get("/recipes/:id", async function(request, response){
         ?dish <http://www.w3.org/2000/01/rdf-schema#label> ?dishName .
         FILTER (lang(?dishName) = "en") .
         ${regional_preferences_filter}
-    } LIMIT 50
+    } LIMIT 100
     `
 
     client.query.select(query).then(rows => {
@@ -393,6 +391,7 @@ app.get("/recipes/:id", async function(request, response){
             }
         }
 
+        var finalRecipes = []
 
         recipes_resources.forEach (async resource => {
             var recipe = {}
@@ -431,6 +430,7 @@ app.get("/recipes/:id", async function(request, response){
                 for (let i = 0; i < recipes.length; i++) {
                     if (recipes[i] != undefined) {
                         if ((recipe.allergy_tag == undefined || recipe.allergy_tag == false) && recipes[i]['name'].toString().localeCompare(recipe.name.toString()) != 0) {
+                            // console.log("-----------------------------------------\n" + recipes[i].name.toString() + " is different of " + recipe.name.toString() + "\n-----------------------------------------")
                             recipes.push(recipe)
                         }
                     }
@@ -444,14 +444,14 @@ app.get("/recipes/:id", async function(request, response){
                     console.error(err);
                 }
             });
-        
-            console.log(recipes)
+            finalRecipes = [...new Set(recipes)]
+            // console.log(finalRecipes[0])
 
             const model = {
-                recipes: recipes
+                recipes: finalRecipes
             }
-
-            response.render("personalizedRecipes.hbs", model).catch(err => {console.error(err)})
+            if (finalRecipes[0] != undefined && recipes_resources[recipes_resources.length - 1] === resource)
+                response.render("personalizedRecipes.hbs", model)
         })
     } else {
         response.render("personalizedRecipes.hbs")
